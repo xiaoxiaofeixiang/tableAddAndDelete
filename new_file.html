@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<style>
+			table tr th,table tr td{border: 1px solid brown;width: 80px;text-align: center;height: 60px;line-height: 60px;}
+		</style>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th id="all">全选</th>
+				<th>科目名称</th>
+				<th>价格</th>
+				<th>操作</th>
+			</tr>
+			<tbody id="tb">
+				<tr>
+					<td><input type="checkbox" id="check1" onclick="checkStatus(this)"/></td>
+					<td>语文</td>
+					<td>200.00</td>
+					<td><a title="删除" onClick="article_del(this)" href="javascript:;">删除</a></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="check2" onclick="checkStatus(this)" /></td>
+					<td>数学</td>
+					<td>100.00</td>
+					<td><a title="删除" onClick="article_del(this)" href="javascript:;">删除</a></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="check3" onclick="checkStatus(this)" /></td>
+					<td>英语</td>
+					<td>500.00</td>
+					<td><a title="删除" onClick="article_del(this)" href="javascript:;">删除</a></td>
+				</tr>
+			</tbody>
+		</table>
+		课程总价格<span id="allSpend">0.00</span>元
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.js"></script>
+		<script type="text/javascript">
+			/*全选操作*/
+			$("#all").click(function(){
+				$("input:checkbox").attr("checked",true);
+				/*计算科目总价格*/
+				var sum=0;
+				$("#tb tr").each(function(){
+				 sum+=parseInt($(this).find("td").eq(2).text())
+				})
+				console.log(sum)
+				$('#allSpend').text(sum+".00")
+			});
+			  /*删除某一条操作*/  
+            function article_del(obj){  
+                var res = confirm('确认要删除吗？');  
+               var sumdel=$('#allSpend').text();
+               console.log("sumdel"+sumdel)
+                if(res == true)  
+                {  /*判断我删除的元素是否选中，如果选中减掉对应的值，如果未选中直接减掉一个0即可以*/
+                	console.log($(obj).parent().parent().find('td input').is(':checked'))
+                	if($(obj).parent().parent().find('td input').is(':checked')==true){
+                	var sumLast= parseInt($(obj).parent().parent().find('td').eq(2).text())
+                    }else{
+                	sumLast=0;
+                    }
+                	 $(obj).parents("tr").remove();
+                    console.log("sumLast"+sumLast)
+				   var sumn=parseInt(sumdel)-sumLast;
+					
+					$('#allSpend').text(sumn+".00")
+                }                         
+            }
+            /* 判断复选框的状态*/
+          function checkStatus(checkstatus){
+	           console.log($(checkstatus).is(':checked'));
+	           var money=$('#allSpend').text()
+            /*如果这个多选项我取消勾选之后,总价格会自动减掉这科的价格*/
+           if($(checkstatus).is(':checked')==false){
+	           console.log(	parseInt($(checkstatus).parent().parent().find('td').eq(2).text()))
+	           var money1=money-parseInt($(checkstatus).parent().parent().find('td').eq(2).text());
+	           $('#allSpend').text(money1+".00")
+           	
+           }
+           /*如果这个多选项我勾选之后,总价格会自动累加这科的价格*/
+           if($(checkstatus).is(':checked')==true){
+	           console.log(	parseInt($(checkstatus).parent().parent().find('td').eq(2).text()))
+	           var money1=parseInt(money)+parseInt($(checkstatus).parent().parent().find('td').eq(2).text());
+	           $('#allSpend').text(money1+".00")
+           	
+            }
+           }
+			
+		</script>
+		
+	</body>
+</html>
